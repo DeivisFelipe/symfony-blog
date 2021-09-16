@@ -290,7 +290,7 @@ class Author
      * 
      * @param string $twitter
      * 
-     * @Author
+     * @return Author
      */
     public function setTwitter(?string $twitter): self
     {
