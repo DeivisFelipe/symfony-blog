@@ -2,7 +2,6 @@ security:
     providers:
         hwi:
             id: hwi_oauth.user.provider
-
     firewalls:
         secured_area:
             anonymous: ~
