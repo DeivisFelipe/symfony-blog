@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AuthorRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -84,6 +86,16 @@ class Author
      * @ORM\Column(name="github", type="string", length=255, nullable=true)
      */
     private $github;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BlogPost::class, mappedBy="author", orphanRemoval=true)
+     */
+    private $blogPosts;
+
+    public function __construct()
+    {
+        $this->blogPosts = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -307,6 +319,36 @@ class Author
     public function setGithub(?string $github): self
     {
         $this->github = $github;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogPost[]
+     */
+    public function getBlogPosts(): Collection
+    {
+        return $this->blogPosts;
+    }
+
+    public function addBlogPost(BlogPost $blogPost): self
+    {
+        if (!$this->blogPosts->contains($blogPost)) {
+            $this->blogPosts[] = $blogPost;
+            $blogPost->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlogPost(BlogPost $blogPost): self
+    {
+        if ($this->blogPosts->removeElement($blogPost)) {
+            // set the owning side to null (unless already changed)
+            if ($blogPost->getAuthor() === $this) {
+                $blogPost->setAuthor(null);
+            }
+        }
 
         return $this;
     }
